@@ -86,5 +86,24 @@ namespace Crash
             riff.Items.Add(new RIFFData("MTrk",mtrk));
             return riff.SaveBody(Endianness.BigEndian);
         }
+
+        public static SEQ FromMIDI(byte[] data)
+        {
+            if (data == null)
+                throw new ArgumentNullException("data");
+
+            if (data.Length < 15)
+            {
+                ErrorManager.SignalIgnorableError("MIDI: Data is too short");
+            }
+
+            short resolution = BEBitConv.FromInt16(data, 12);
+
+            int tempo = MIDIConv.From3BE(data, 26);
+            short rhythm = BEBitConv.FromInt16(data, 33);
+            byte[] scoredata = new byte[data.Length - 37];
+            Array.Copy(data, 37, scoredata, 0, scoredata.Length);
+            return new SEQ(resolution, tempo, rhythm, scoredata);
+        }
     }
 }

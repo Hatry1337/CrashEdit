@@ -21,6 +21,8 @@ namespace CrashEdit
             AddMenuSeparator();
             AddMenu("Import VH",Menu_Import_VH);
             AddMenu("Import SEQ",Menu_Import_SEQ);
+            AddMenu("Import MIDI", Menu_Import_MIDI);
+
             AddMenuSeparator();
             AddMenu("Export SEP",Menu_Export_SEP);
             AddMenuSeparator();
@@ -119,6 +121,17 @@ namespace CrashEdit
                 SEQ seq = SEQ.Load(data);
                 MusicEntry.SEP.SEQs.Add(seq);
                 AddNode(new SEQController(this,seq));
+            }
+        }
+
+        private void Menu_Import_MIDI()
+        {
+            byte[] data = FileUtil.OpenFile(FileFilters.MIDI, FileFilters.Any);
+            if (data != null)
+            {
+                SEQ seq = SEQ.FromMIDI(data);
+                MusicEntry.SEP.SEQs.Add(seq);
+                AddNode(new SEQController(this, seq));
             }
         }
 

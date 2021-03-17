@@ -9,6 +9,8 @@ namespace CrashEdit
             MusicEntryController = musicentrycontroller;
             SEQ = seq;
             AddMenu("Replace SEQ",Menu_Replace_SEQ);
+            AddMenu("Replace by MIDI", Menu_Replace_MIDI);
+
             AddMenu("Delete SEQ",Menu_Delete_SEQ);
             AddMenuSeparator();
             AddMenu("Export SEQ",Menu_Export_SEQ);
@@ -38,6 +40,17 @@ namespace CrashEdit
             if (data != null)
             {
                 SEQ = SEQ.Load(data);
+                MusicEntryController.MusicEntry.SEP.SEQs[i] = SEQ;
+            }
+        }
+
+        private void Menu_Replace_MIDI()
+        {
+            int i = MusicEntryController.MusicEntry.SEP.SEQs.IndexOf(SEQ);
+            byte[] data = FileUtil.OpenFile(FileFilters.MIDI, FileFilters.Any);
+            if (data != null)
+            {
+                SEQ = SEQ.FromMIDI(data);
                 MusicEntryController.MusicEntry.SEP.SEQs[i] = SEQ;
             }
         }
